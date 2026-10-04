@@ -6,7 +6,8 @@
 .author-note{margin:8px 0 0;color:var(--muted);font-size:.78rem}
 .author-note a{color:var(--blue);text-decoration:none}
 .venue-note{color:var(--blue);font-weight:700;letter-spacing:.03em}
-.corresponding-author{color:var(--blue)!important;text-decoration:underline;text-decoration-color:#abd3e3;text-underline-offset:3px}
+.corresponding-author{color:inherit!important;text-decoration:none!important}
+.contribution-note{margin:7px 0 0;color:var(--muted);font-size:.78rem}
 .results-table-wide{overflow-x:auto}
 .results-table-wide .results-table{min-width:760px}
 .strict-table-wrap{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:25px 24px;box-shadow:var(--shadow-sm)}

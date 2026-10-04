@@ -1,80 +1,52 @@
-# Academic Project Page Template
+# CentralKV: Compressing Long-Context LLMs via Attention-Graph Centrality
 
-> **Update (September 2025)**: This template has been modernized with better design, SEO, and mobile support. For the original version, see the [original-version branch](https://github.com/eliahuhorwitz/Academic-project-page-template/tree/original-version).
+Official project page and supplementary materials for **CentralKV**, a training-free framework for compressing the key-value (KV) cache during long-context large language model inference.
 
-A clean, responsive template for academic project pages.
+## Overview
 
+Long-context inference is limited by the linear memory growth of the KV cache. Existing eviction strategies often retain tokens with high accumulated attention or remove semantic redundancy. These policies can discard low-frequency tokens that connect distant dependencies in a multi-step reasoning chain.
 
-Example project pages built using this template are:
-- https://horwitz.ai/probex
-- https://vision.huji.ac.il/probegen
-- https://horwitz.ai/mother
-- https://horwitz.ai/spectral_detuning
-- https://vision.huji.ac.il/ladeda
-- https://vision.huji.ac.il/dsire
-- https://horwitz.ai/podd
-- https://dreamix-video-editing.github.io
-- https://horwitz.ai/conffusion
-- https://horwitz.ai/3d_ads/
-- https://vision.huji.ac.il/ssrl_ad
-- https://vision.huji.ac.il/deepsim
+CentralKV models attention as a dynamic sparse causal graph. Its **Stream-Influence** algorithm updates token centrality online and preserves structurally important bridge tokens during KV-cache compression. The graph is constructed directly from the attention operation, without a separate cosine-similarity computation or model retraining.
 
+## Method
 
+At each decoding step, CentralKV:
 
-## Start using the template
-To start using the template click on `Use this Template`.
+1. Reuses the attention weights produced by the forward pass.
+2. Constructs a sparse graph from the top-k causal attention edges.
+3. Updates token centrality with the online Stream-Influence rule.
+4. Protects system prompts and the local window, then evicts the lowest-centrality cache entries when the budget is full.
 
-The template uses html for controlling the content and css for controlling the style. 
-To edit the websites contents edit the `index.html` file. It contains different HTML "building blocks", use whichever ones you need and comment out the rest.  
+This design targets **structural bridge tokens**: tokens whose direct attention mass may be small, but whose removal disrupts long-range information flow.
 
-**IMPORTANT!** Make sure to replace the `favicon.ico` under `static/images/` with one of your own, otherwise your favicon is going to be a dreambooth image of me.
+## Evaluation
 
-## What's New
+We evaluate CentralKV on LongBench under a 20% logical KV-cache budget and report a separate strict physical-budget analysis. The project page includes the original paper tables for:
 
-- Modern, clean design with better mobile support
-- Improved SEO with proper meta tags and structured data
-- Performance improvements (lazy loading, optimized assets)
-- More Works dropdown
-- Copy button for BibTeX citations
-- Better accessibility
+- LongBench evaluation across six task categories;
+- detailed results across 18 LongBench datasets;
+- strict physical budgeting on 2WikiMultihopQA.
 
-## Components
+The camera-ready paper also reports ablations, Needle In A Haystack evaluation, efficiency analysis, cross-model results, and the complete inference protocol.
 
-- Teaser video
-- Image carousel
-- YouTube video embedding
-- Video carousel
-- PDF poster viewer
-- BibTeX citation
+## Links
 
-## Customization
+- **Project page:** [https://sanmu-27.github.io/CentralKV-/](https://sanmu-27.github.io/CentralKV-/)
+- **Paper PDF:** [static/pdfs/CentralKV.pdf](static/pdfs/CentralKV.pdf)
+- **Code repository:** [https://github.com/Sanmu-27/CentralKV](https://github.com/Sanmu-27/CentralKV)
 
-The HTML file has TODO comments showing what to replace:
+## Citation
 
-- Paper title, authors, institution, conference
-- Links (arXiv, GitHub, etc.)
-- Abstract and descriptions  
-- Videos, images, and PDFs
-- Related works in the dropdown
-- Meta tags for SEO and social sharing
+~~~bibtex
+@inproceedings{wu2026centralkv,
+  title     = {CentralKV: Compressing Long-Context LLMs via Attention-Graph Centrality},
+  author    = {Wu, Yusen and Yinjun, Huang and Tan, Jia Yee and Li, Hao and Guo, Rongfeng and Fan, Liang and Luo, Jiachen and Dong, Guangyuan and Xiang, Sike},
+  booktitle = {Proceedings of EMNLP 2026},
+  year      = {2026},
+  url       = {https://github.com/Sanmu-27/CentralKV}
+}
+~~~
 
-### Meta Tags
-The template includes meta tags for better search engine visibility and social media sharing. These appear in the `<head>` section and help with:
-- Google Scholar indexing
-- Social media previews (Twitter, Facebook, LinkedIn)
-- Search engine optimization
+## Authors
 
-Create a 1200x630px social preview image at `static/images/social_preview.png`.
-
-## Tips
-
-- Compress images with [TinyPNG](https://tinypng.com)
-- Use YouTube for large videos (>10MB)  
-- Replace the favicon in `static/images/`
-- Works with GitHub Pages
-
-## Acknowledgments
-Parts of this project page were adopted from the [Nerfies](https://nerfies.github.io/) page.
-
-## Website License
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+Yusen Wu, Huang Yinjun, Jia Yee Tan, Hao Li, Rongfeng Guo, Liang Fan, Jiachen Luo, Guangyuan Dong, and Sike Xiang (corresponding author).
